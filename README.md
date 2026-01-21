@@ -1,10 +1,13 @@
-# Smart_Log_Analyzer-Python
+#  Smart_Log_Analyzer
 
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-active-success)
 
-A robust, modular Python-based tool designed to automate server log auditing. This system parses raw log files to detect error patterns, identify potential security threats (suspicious IPs), and generate actionable reports in CSV and TXT formats.
+A **modular, Python-based log auditing tool** built to automate server log analysis.  
+Smart_Log_Analyzer parses raw server logs to detect error patterns, identify suspicious IP addresses, and generate actionable security and error reports.
+
+Designed with **clarity, extensibility, and real-world use cases** in mind (DevOps monitoring, SOC analysis, firewall automation).
 
 ---
 
@@ -15,56 +18,68 @@ A robust, modular Python-based tool designed to automate server log auditing. Th
 - [Usage](#-usage)
 - [Configuration](#-configuration)
 - [Reports & Outputs](#-reports--outputs)
+- [Limitations](#-limitations)
 - [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
 ##  Key Features
 
-* **Log Parsing Engine**: Utilizes Regex to extract IP addresses, timestamps, HTTP methods, and status codes from raw server logs.
-* **Automated Error Analysis**: Aggregates and counts HTTP error codes (Status 400+) to highlight system stability issues.
-* **Security Threat Detection**: Identifies suspicious IP addresses based on high frequencies of specific security events (e.g., 401, 403, 404, 429).
-* **Real-time Alerting**: Triggers console alerts when error counts or suspicious IP lists exceed defined safety thresholds.
-* **Multi-Format Reporting**: Automatically generates detailed summaries:
-    * `error_report.txt`: Breakdown of error codes and frequencies.
-    * `security_report.csv`: List of flagged malicious IPs for firewall integration.
+- **Log Parsing Engine**  
+  Regex-based extraction of IP addresses, timestamps, HTTP methods, and status codes.
+
+- **Automated Error Analysis**  
+  Aggregates and analyzes HTTP error responses (4xx & 5xx) to evaluate system health.
+
+- **Security Threat Detection**  
+  Identifies suspicious IPs based on abnormal request frequencies (401, 403, 404, 429).
+
+- **Threshold-Based Alerting**  
+  Triggers console alerts when error counts or suspicious IPs exceed safe limits.
+
+- **Multi-Format Reporting**  
+  Automatically generates:
+  - `error_report.txt` – Error breakdown and counts
+  - `security_report.csv` – Flagged IPs ready for firewall blocklists
 
 ---
 
-##  Project Architecture
-
-The project is structured as a modular Python package. To run successfully, ensure your directory looks like this:
+## Project Architecture
 
 ```bash
-log-analyzer/
+Smart_Log_Analyzer/
 │
-├── main.py                  # Entry point for the application
+├── main.py                  # Application entry point
 ├── logs/
 │   └── sample.log           # Input log file
-├── reports/                 # Output directory for generated reports
+├── reports/
 │   ├── error_report.txt
 │   └── security_report.csv
 │
-└── analyzer/                # Core logic package
+└── analyzer/
     ├── __init__.py
-    ├── log_parser.py        # Regex-based log extraction
-    ├── error_analyzer.py    # Status code analysis
+    ├── log_parser.py        # Regex-based log parsing
+    ├── error_analyzer.py    # HTTP error aggregation
     ├── security_analyzer.py # Suspicious IP detection logic
-    ├── alert_manager.py     # Threshold-based alerting system
-    └── report_generator.py  # File I/O for reports
+    ├── alert_manager.py     # Threshold-based alert system
+    └── report_generator.py  # TXT / CSV report generation
 
 ```
 ##  Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/Mohit-368/Smart_Log_Analyzer-Python]
+    git clone https://github.com/Mohit-368/Smart_Log_Analyzer-Python
     cd Smart_Log_Analyzer-Python
+
     ```
 
 2.  **Prerequisites:**
     This project relies on Python's standard library. No external `pip` dependencies are required.
     * Requires Python 3.x+
+    * No external dependencies (Python standard library only)
 
 3.  **Prepare Directories:**
     Ensure the `logs/` and `reports/` directories exist to avoid File I/O errors.
@@ -74,21 +89,20 @@ log-analyzer/
 
 ##  Usage
 
-1.  **Setup:** Place your server log file inside the `logs/` directory and rename it to `sample.log` (or update the path in `main.py`).
-
-2.  **Execution:** Run the main script:
+1.  Place your server log file inside the logs/ directory
+2.  Rename it to sample.log (or update the path in main.py):
     ```bash
     python main.py
     ```
 
-3.  **Expected Console Output:**
+3.  **Run the analyzer:**
     ```text
     ⚠ ALERT: High number of errors detected!
     Total Errors: 45
 
     ⚠ ALERT: Suspicious IPs detected:
-     - 192.168.1.15
-     - 10.0.0.5
+    - 192.168.1.15
+    - 10.0.0.5
 
     ✅ Error report generated: reports/error_report.txt
     ✅ Security report generated: reports/security_report.csv
@@ -96,22 +110,24 @@ log-analyzer/
     --- SUMMARY ---
     Errors: Counter({404: 25, 500: 20})
     Suspicious IPs: ['192.168.1.15', '10.0.0.5']
+
     ```
 #  Configuration
 
 You can tune the sensitivity of the analyzer by modifying the default thresholds in the module files.
 
 ##  Security Thresholds
-
-Modify `analyzer/security_analyzer.py` to change how many failed attempts trigger a flag.
-
-`# Default: 5 failed attempts flags an IP def detect_suspicious_ips(self, logs, threshold=5):`
-
+File: analyzer/security_analyzer.py
+```bash
+# Default: 5 failed attempts flags an IP
+def detect_suspicious_ips(self, logs, threshold=5):
+```
 ##  Alert Thresholds
-
-Modify `analyzer/alert_manager.py` to change when console alerts are triggered.
-
-`# Default: Alert if total errors > 20 def trigger_alerts(self, ..., error_threshold=20, ip_alert_threshold=0):`
+File: analyzer/alert_manager.py
+```bash
+# Default: Alert if total errors > 20
+def trigger_alerts(self, ..., error_threshold=20, ip_alert_threshold=0):
+```
 
 # Reports & Outputs
 
